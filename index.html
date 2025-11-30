@@ -1,0 +1,554 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>Campus Intel 每日情报</title>
+        <style>
+            :root { --bg: #f3f4f6; --card-bg: #ffffff; --text: #1f2937; --sub: #6b7280; }
+            body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text); }
+            
+            .header { max-width: 1200px; margin: 0 auto 20px; display: flex; justify-content: space-between; align-items: center; }
+            .container { display: flex; gap: 24px; max-width: 1200px; margin: 0 auto; align-items: flex-start; }
+            .main-col { flex: 2; background: var(--card-bg); padding: 24px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+            .side-col { flex: 1; background: var(--card-bg); padding: 24px; border-radius: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); position: sticky; top: 20px; }
+            
+            .btn { padding: 8px 16px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9em; transition: 0.2s; border: none; cursor: pointer; }
+            .btn-primary { background: #2563eb; color: white; }
+            .btn-toggle { background: #e5e7eb; color: #374151; }
+            .btn-toggle:hover { background: #d1d5db; }
+
+            .card { padding: 12px; margin-bottom: 12px; border-radius: 8px; border-left: 4px solid #ccc; background: #f9fafb; transition: transform 0.2s; }
+            .card:hover { transform: translateY(-2px); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+            
+            .tag-pill { display: inline-block; padding: 2px 8px; border-radius: 99px; font-size: 0.75em; font-weight: bold; margin-bottom: 6px; }
+            .evt-time { font-size: 1.1em; font-weight: 700; color: #111; }
+            .evt-loc { color: var(--sub); font-size: 0.9em; margin-left: 8px; }
+            .evt-title { font-size: 1.05em; margin: 6px 0; color: #374151; }
+            .evt-raw { font-size: 0.8em; color: #9ca3af; font-style: italic; }
+
+            h2 { margin-top: 0; font-size: 1.2em; border-bottom: 2px solid #f3f4f6; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+            .group-header { font-size: 0.9em; font-weight: bold; margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+            .section-divider { margin: 30px 0 15px; font-size: 0.85em; color: #9ca3af; text-align: center; position: relative; }
+            .section-divider::before { content: ""; position: absolute; left: 0; top: 50%; width: 100%; height: 1px; background: #e5e7eb; z-index: 0; }
+            .section-divider span { background: white; padding: 0 10px; position: relative; z-index: 1; }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div>
+                <h1 style="margin:0; font-size:1.5em;">🛡️ 每日情报仪表盘</h1>
+                <div style="color:var(--sub); font-size:0.9em;">生成时间: 2025-11-30 20:29</div>
+            </div>
+            <a href="latest_calendar.ics" class="btn btn-primary">📅 导出日历 (.ics)</a>
+        </div>
+        
+        <div class="container">
+            <div class="main-col">
+                <h2>
+                    <span id="list-title">⏳ 日程时间轴</span>
+                    <button class="btn btn-toggle" onclick="toggleMode()">
+                        <span id="mode-text">按时间排序</span>
+                    </button>
+                </h2>
+                <div id="timeline-content"></div>
+            </div>
+            
+            <div class="side-col">
+                <h2>📌 情报广场</h2>
+                <div class="group-header" style="color:#ef4444">🔴 学业必修</div>
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">分享军事理论重点文件</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 创就17.0大家庭</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">医学物理课后题讨论</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 创就17.0大家庭</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">分享军事理论重点资料</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 创就17.0大家庭</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            <div class="group-header" style="color:#f97316">🟠 竞赛项目</div>
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">2025-2026年度四川大学挑战杯院级组织情况评分表发布</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 无</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">2025年小挑校赛附件发布</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 无</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">挑战杯四川大学2025-2026年度大学生创业计划竞赛作品申报书发布</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 无</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">第十四届挑战杯中国大学生创业计划竞赛主赛道金奖名单发布</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 无</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">2025-2026年度“四川大学”挑战杯院级组织情况评分表发布</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 附件文件</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">学院重点项目推荐汇总表发布</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 附件文件</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">2025年“小挑”校赛附件发布</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 附件文件</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">“挑战杯”四川大学2025-2026年度大学生创业计划竞赛作品申报书发布</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 附件文件</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">2025-2026年度“四川大学”挑战杯院级组织情况评分表</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 附件文件</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">第十四届“挑战杯”中国大学生创业计划竞赛主赛道金奖名单</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 附件文件</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">2025-2026年度”四川大学“挑战杯院级组织情况评分表</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 附件3：2025-2026年度”四川大学“挑战杯院级组织情况评分表.docx</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">学院重点项目推荐汇总表</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 附件4：学院重点项目推荐汇总表.xlsx</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">2025年“小挑”校赛附件1-4</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 2025年“小挑”校赛附件1-4.zip</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">“挑战杯”四川大学2025-2026年度大学生创业计划竞赛作品申报书</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 附件2：“挑战杯”四川大学2025-2026年度大学生创业计划竞赛作品申报书.docx</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">第十四届“挑战杯”中国大学生创业计划竞赛主赛道金奖名单发布</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 附件1 第十四届“挑战杯”中国大学生创业计划竞赛主赛道金奖名单.pdf</span>
+                </div>
+            </div>
+            <div class="group-header" style="color:#3b82f6">🔵 休闲活动</div>
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">新型网络诈骗预警，针对助学金、奖学金和补贴发放，请同学们严格防范</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业03班</span>
+                    <span style="color:#007bff;">📞 https://mp.weixin.qq.com/s/9zd_VI-kvk5NGAhY9VNmgA</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">今晚观星天气预报：地点成都双流，温度8°C，天气多云，湿度70%，风速15km/h，能见度一般，云量较多，观测条件一般，建议选择云层较薄的时段进行观测。</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 天文协会25届会员群✨</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">个人原因导致本月最后一天在群内发言，感谢大家陪伴。</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 西园17舍围合群</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">询问每晚电影安排。</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 西园17舍围合群</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">由于近期日本人来华存在安全风险，暂停日本艺人相关来华演艺活动，并升级部分见面会为其他艺人活动。</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 西园17舍围合群</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">SFC Club 4.0纳新，面向大一至大三学生，提供泛经管方向实习、升学、竞赛、科研等内训和1对1指导</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025大挑校赛信息交流①群</span>
+                    <span style="color:#007bff;">📞 无</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">电控硬件组第二次培训回放链接提供</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2026RoboMaster机器人协会会员群</span>
+                    <span style="color:#007bff;">📞 https://meeting.tencent.com/crm/K0Grg7g050</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">新型网络诈骗针对助学金、奖学金和补贴发放，请同学们严格防范</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 https://mp.weixin.qq.com/s/9zd_VI-kvk5NGAhY9VNmgA</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">暂停日本艺人相关来华演艺活动，并升级多个见面会为时代少年团相关活动</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 西园17舍围合群</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">SFC Club 4.0纳新，欢迎大一至大三学生加入泛经管方向社团，提供实习、升学、竞赛、科研等内训和1对1指导</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025大挑校赛信息交流①群</span>
+                    <span style="color:#007bff;">📞 无</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">新型网络诈骗频发，针对助学金、奖学金和补贴发放，提醒学生防范</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 https://mp.weixin.qq.com/s/9zd_VI-kvk5NGAhY9VNmgA</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">新型网络诈骗频发，针对助学金、奖学金和各类补贴发放，请同学们高度重视、严格防范</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业03班</span>
+                    <span style="color:#007bff;">📞 https://mp.weixin.qq.com/s/9zd_VI-kvk5NGAhY9VNmgA</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">暂停日本艺人相关来华演艺活动，部分见面会行程免费升级</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 西园17舍围合群</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">SFC Club 4.0纳新，欢迎大一至大三学生加入，提供实习、升学、竞赛、科研等内训和1对1指导</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025大挑校赛信息交流①群</span>
+                    <span style="color:#007bff;">📞 无</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">电控硬件组第二次培训回放</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2026RoboMaster机器人协会会员群</span>
+                    <span style="color:#007bff;">📞 https://meeting.tencent.com/crm/K0Grg7g050</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">提醒：作品中最好避开日系元素设计，以避免争议</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 川大2025级游研社群</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">推荐涮羊肉餐厅：丁满堂（珠江路）</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 创就17.0大家庭</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">推荐涮羊肉餐厅：全福居老北京涮羊肉（滨河路一段113-115号）</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 创就17.0大家庭</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">新型网络诈骗提醒，针对助学金、奖学金和补贴发放，请严格防范</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业03班</span>
+                    <span style="color:#007bff;">📞 https://mp.weixin.qq.com/s/9zd_VI-kvk5NGAhY9VNmgA</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">今晚观星天气预报：多云，温度8°C，湿度70%，风速15km/h，能见度一般，建议选择云层较薄时段观测</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 天文协会25届会员群✨</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">个人原因，本月最后一天在群里发言，感谢陪伴</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 西园17舍围合群</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">询问每晚电影安排</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 西园17舍围合群</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">由于安全风险，暂停日本艺人相关来华演艺活动，并升级为其他艺人见面会</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 西园17舍围合群</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">有人可能拿错外卖，如果不是拿错请告知</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 西园17舍围合群</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">SFC Club 4.0纳新，面向大一至大三学生，提供泛经管方向的内训和指导</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025大挑校赛信息交流①群</span>
+                    <span style="color:#007bff;">📞 无</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">提醒：作品中最好避开日系元素设计，以避免争议，学校已发出相关提醒</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 川大2025级游研社群</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">新型网络诈骗预警，针对助学金、奖学金和补贴发放</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 2025级设计学类专业01班</span>
+                    <span style="color:#007bff;">📞 https://mp.weixin.qq.com/s/9zd_VI-kvk5NGAhY9VNmgA</span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">大合照等待摄影同学导出</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 创就17.0大家庭</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">推荐涮羊肉餐厅：丁满堂（珠江路）、全福居老北京涮羊肉（滨河路一段113-115号）</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 创就17.0大家庭</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            <div class="card info-card">
+                <div style="font-weight:600; color:#333;">分享部门大会PPT</div>
+                <div style="display:flex; justify-content:space-between; margin-top:6px; font-size:0.85em;">
+                    <span style="color:#666; background:#eee; padding:2px 6px; border-radius:4px;">来自: 创就17.0大家庭</span>
+                    <span style="color:#007bff;">📞 </span>
+                </div>
+            </div>
+            
+            </div>
+        </div>
+
+        <script>
+            const events = [{"title": "签到截止", "time": "2025-11-29 16:00", "loc": "", "tag": "Academic", "raw": "大家尽快签到哦 四点截止", "group_name": "创就17.0大家庭"}, {"title": "展览展出截止", "time": "2025-11-30 23:59", "loc": "未指定", "tag": "Leisure", "raw": "推荐展览，展出截止明天(11月30日)，喜欢的同学买票去看噢", "group_name": "2025级设计学类专业01班"}, {"title": "有人来江安九号", "time": "2025-11-30 19:00", "loc": "江安九号", "tag": "Leisure", "raw": "今晚七点有人来江安九号", "group_name": "川大棋协狼人杀、血染大联盟"}, {"title": "大创申请科普微课", "time": "2025-11-30 20:00", "loc": "学长微课", "tag": "Competition", "raw": "时值“大创”申请季，小思文理科小导师携手，在今晚的学长微课共同为新同学进行“大创”申请科普，从赛道分析、选题策略，到团队组建、申报书撰写…请感兴趣的同学积极参加～", "group_name": "2025级设计学类专业03班"}];
+            const tagsConfig = {"Academic": {"color": "#ef4444", "bg": "#fee2e2", "name": "🔴 学业必修"}, "Competition": {"color": "#f97316", "bg": "#ffedd5", "name": "🟠 竞赛项目"}, "Credits": {"color": "#22c55e", "bg": "#dcfce7", "name": "🟢 二课志愿"}, "Leisure": {"color": "#3b82f6", "bg": "#dbeafe", "name": "🔵 休闲活动"}};
+            let currentMode = 'time';
+
+            function render() {
+                const container = document.getElementById('timeline-content');
+                container.innerHTML = ''; 
+
+                if (events.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; padding:40px; color:#999;">📭 暂无日程安排</div>';
+                    return;
+                }
+
+                if (currentMode === 'time') renderTimeMode(container);
+                else renderCategoryMode(container);
+            }
+
+            function renderTimeMode(container) {
+                document.getElementById('list-title').innerText = "⏳ 日程时间轴 (Time View)";
+                const now = new Date();
+                const future = [];
+                const past = [];
+
+                events.forEach(e => {
+                    const t = new Date(e.time);
+                    if (t >= now) future.push(e);
+                    else past.push(e);
+                });
+
+                future.sort((a, b) => new Date(a.time) - new Date(b.time));
+                past.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+                if (future.length > 0) {
+                    container.innerHTML += '<div class="group-header" style="color:#2563eb">🚀 即将到来</div>';
+                    future.forEach(e => container.appendChild(createCard(e)));
+                } 
+                if (past.length > 0) {
+                    container.innerHTML += '<div class="section-divider"><span>已结束 / 历史</span></div>';
+                    past.forEach(e => container.appendChild(createCard(e, true)));
+                }
+            }
+
+            function renderCategoryMode(container) {
+                document.getElementById('list-title').innerText = "📂 分类视图 (Category View)";
+                const order = ["Academic", "Competition", "Credits", "Leisure"];
+                const now = new Date();
+                
+                order.forEach(catKey => {
+                    const groupEvents = events.filter(e => e.tag === catKey);
+                    if (groupEvents.length === 0) return;
+
+                    // 这里的核心：在每个类别内部，也把过期事件沉底
+                    const future = [];
+                    const past = [];
+                    groupEvents.forEach(e => {
+                        if (new Date(e.time) >= now) future.push(e);
+                        else past.push(e);
+                    });
+
+                    future.sort((a, b) => new Date(a.time) - new Date(b.time));
+                    past.sort((a, b) => new Date(b.time) - new Date(a.time)); // 过去的时间倒序
+
+                    // 渲染标题
+                    const header = document.createElement('div');
+                    header.className = 'group-header';
+                    header.style.color = tagsConfig[catKey].color;
+                    header.innerText = tagsConfig[catKey].name;
+                    container.appendChild(header);
+
+                    // 先渲染未来，再渲染过去
+                    future.forEach(e => container.appendChild(createCard(e, false)));
+                    past.forEach(e => container.appendChild(createCard(e, true)));
+                });
+            }
+
+            function createCard(e, isPast=false) {
+                const div = document.createElement('div');
+                div.className = 'card';
+                const style = tagsConfig[e.tag] || tagsConfig['Leisure'];
+                
+                div.style.borderLeftColor = style.color;
+                div.style.background = isPast ? '#f9fafb' : '#fff';
+                if(isPast) div.style.opacity = '0.6'; // 过期变淡
+
+                div.innerHTML = `
+                    <div>
+                        <span class="tag-pill" style="background:${style.bg}; color:${style.color}">${style.name}</span>
+                        <span class="evt-time" style="${isPast ? 'text-decoration:line-through;color:#999' : ''}">${e.time.slice(5, 16).replace(' ', ' ')}</span>
+                        <span class="evt-loc">@${e.loc || '待定'}</span>
+                    </div>
+                    <div class="evt-title">${e.title}</div>
+                    <div class="evt-raw">来源: ${e.group_name}</div>
+                `;
+                return div;
+            }
+
+            function toggleMode() {
+                currentMode = (currentMode === 'time') ? 'category' : 'time';
+                document.getElementById('mode-text').innerText = (currentMode === 'time') ? '按时间排序' : '按分类排序';
+                render();
+            }
+
+            render();
+        </script>
+    </body>
+    </html>
+    
