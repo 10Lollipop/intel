@@ -1,4 +1,4 @@
-##🛡️ Campus Intel | 校园情报收割者 V4.4
+## 🛡️ Campus Intel | 校园情报收割者 V4.4
 
 "Turn Chaos into Order."
 
@@ -16,7 +16,7 @@
 
 ![alt text](https://img.shields.io/badge/Build-Modular-orange)
 
-##📖 项目背景 (Background)
+# 📖 项目背景 (Background)
 
 作为一名设计专业的学生，我每天只有 22:00 - 23:00 会打开电脑。但我所在的十几个 QQ 群（班级、社团、竞赛）全天都在产生海量的碎片化信息。
 
@@ -31,7 +31,7 @@
 解决方案：
 Project Harvester (收割者) —— 一个主动式的情报抓取系统。它利用我开机的这 1 小时，自动回溯过去 24~72 小时的所有群消息，利用 DeepSeek 大模型进行语义分析，清洗出结构化的情报，并生成可视化仪表盘。
 
-##✨ 核心功能 (Features)
+# ✨ 核心功能 (Features)
 
 🕵️‍♂️ 主动收割 (Active Polling)
 
@@ -39,7 +39,7 @@ Project Harvester (收割者) —— 一个主动式的情报抓取系统。它�
 
 支持自定义回溯时间（如：抓取过去 30 小时内的消息）。
 
-##🧠 AI 语义分析 (DeepSeek Powered)
+# 🧠 AI 语义分析 (DeepSeek Powered)
 
 利用 DeepSeek-V3 模型，剔除闲聊、表情包和无效复读。
 
@@ -61,7 +61,7 @@ Project Harvester (收割者) —— 一个主动式的情报抓取系统。它�
 
 来源溯源：每一条情报都标注了来源群组，方便回查。
 
-##☁️ 云端同步 (Cloud Sync)
+# ☁️ 云端同步 (Cloud Sync)
 
 自动将生成的报告部署到 GitHub Pages。
 
@@ -71,7 +71,7 @@ Project Harvester (收割者) —— 一个主动式的情报抓取系统。它�
 
 一键生成 .ics 文件，直接导入 iOS/Android 系统日历。
 
-##🏗️ 技术架构 (Architecture)
+# 🏗️ 技术架构 (Architecture)
 code
 Mermaid
 download
@@ -96,7 +96,7 @@ frontend.py: 视觉呈现。负责生成带 JS 交互的 HTML 报告和 ICS 文�
 
 deployer.py: 物流系统。负责将产物自动 Push 到 GitHub 仓库。
 
-##🚀 快速开始 (Quick Start)
+# 🚀 快速开始 (Quick Start)
 
 注意：本项目依赖本地 QQ 客户端环境。
 
@@ -133,7 +133,7 @@ GROUPS: 需要监听的群号列表
 
 等待“收割”完成，网页自动弹出。
 
-##⚠️ 隐私说明 (Privacy)
+# ⚠️ 隐私说明 (Privacy)
 
 本项目是一个 本地优先 (Local-First) 的工具。
 
@@ -143,7 +143,7 @@ GROUPS: 需要监听的群号列表
 
 请勿将包含真实 API Key 的 main.py 上传到公开仓库！ (建议使用环境变量或 .gitignore)。
 
-#🗺️ 未来计划 (Roadmap)
+# 🗺️ 未来计划 (Roadmap)
 
 V4.4: 模块化重构、云端同步、交互式网页。
 
@@ -151,7 +151,7 @@ V5.0: 电子义眼。接入 Qwen-VL 视觉模型，识别群聊海报中的文�
 
 V5.x: 智能黑名单。自动屏蔽特定“话痨”用户的无效发言。
 
-##👨‍💻 Author
+# 👨‍💻 Author
 
 10Lollipop
 Tech-savvy Designer / 2025级设计系
